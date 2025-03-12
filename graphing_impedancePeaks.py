@@ -280,7 +280,8 @@ for iDataSet in data_ids:
             ax.plot(x_data, fit_exponential(np.linspace(x_data[0], x_data[-1], len(x_data)), *pars), linestyle='--', linewidth=1.5, color='black')
 
 #add legend
-ax.legend(bbox_to_anchor=(1, 0.5), loc=6, frameon=True, fontsize=16, title=legend_header)
+# ax.legend(bbox_to_anchor=(1, 0.5), loc=6, frameon=True, fontsize=16, title=legend_header)
+ax.legend(loc='upper right', frameon=True, fontsize=16, title=legend_header)
 
 if save_figs != False:
     save_fname = os.path.join(data_folder, save_string)
@@ -292,7 +293,7 @@ if save_fitData != False:
     wb_fname = fitData_fname
     
     ws1 = wb.active
-    ws1.append(['Curve fitting data for motorette DC thermal transient tests.'])
+    ws1.append(['Curve fitting data.'])
     ws1.append(['fit equation: y = a - b*exp(c*x)'])
     ws1.append(['fit using scipy.optimize.curve_fit (non-linear least squares)'])
     ws1.append(['params returned as 3x1 array:'])

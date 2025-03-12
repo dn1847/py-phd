@@ -43,7 +43,6 @@ def rlft_plotter(x_datasets, y_datasets, T_datasets=None, data_ids=None, x_label
     import matplotlib.pyplot as plt
     #import matplotlib.ticker as ticker
     from openpyxl import Workbook
-    from pylab import cm
     from scipy.optimize import curve_fit
     import itertools
     from make_save_string import make_save_string
@@ -215,8 +214,8 @@ def rlft_plotter(x_datasets, y_datasets, T_datasets=None, data_ids=None, x_label
     
 #    fig, ax = plt.subplots(figsize=(12,9))
     fig = plt.figure(figsize = (9,9)) #figsize is in inches, default = (6.4, 4.8)
-    ax = fig.add_axes([0, 0, 1, 1]) #([x0, y0, xwidth, ywidth])
-
+    # ax = fig.add_axes([0, 0, 1, 1]) #([x0, y0, xwidth, ywidth])
+    ax = fig.add_subplot(111)
     
     for c in line_indices:
         if c == ctmp:
