@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-def rlft_plotter(x_datasets, y_datasets, T_datasets=None, data_ids=None, x_label='Frequency [Hz]', y_label='R [m$\Omega$]', y_multiplier=1, normalise_y_axis=False, short_legend_tag=False, legend_header=None, filter_temps='all', num_curves='all', fit_curves=False, save_dir='cwd', save_string='default', save_fitDataString = False):
+def rlft_plotter(x_datasets, y_datasets, T_datasets=None, data_ids=None, x_label='Frequency [Hz]', y_label='R [m$\Omega$]', y_multiplier=1, normalise_y_axis=False, short_legend_tags=[False, False], legend_header=None, filter_temps='all', num_curves='all', fit_curves=False, save_dir='cwd', save_string='default', save_fitDataString = False):
     """
     Plot multiple datasets on one set of axes and saves the figures.
     Can fit curves to datasets based on R(f) characteristic relationship.
@@ -46,7 +46,7 @@ def rlft_plotter(x_datasets, y_datasets, T_datasets=None, data_ids=None, x_label
     from scipy.optimize import curve_fit
     import itertools
     from make_save_string import make_save_string
-    from graphingtools import short_name
+    from graphingtools import trim_name, short_name
     
     #--------------------------------------------------------------------------
     # INPUTS
@@ -125,23 +125,22 @@ def rlft_plotter(x_datasets, y_datasets, T_datasets=None, data_ids=None, x_label
     # 2) Legend labelling fcns
     #uses fnction short_name from graphingTools.py
     
-    if short_legend_tag in [False, None]:
+    if short_legend_tags[0] in [False, None] and short_legend_tags[1] in [False, None]:
         name_label = lambda i: 'Coil: %s, ' % (data_ids[i])
     else:
-        omit_tag = False
-        reverse_trim = False
-        flagEnd = 0
-        if 'r!' in short_legend_tag[:2]: #reverse trim direction, see doc
-            reverse_trim = True
-            flagEnd = 2
-        if '!!' in short_legend_tag[:3]: #do not include tag in the label
-            omit_tag = True
-            flagEnd = 2
-            if 'r!!' in short_legend_tag[:3]:
-                flagEnd = 3
+        omit_tags = [False, False]
+        flagEnds = [0, 0]
+        if '!!' in short_legend_tags[0][:3]: #do not include tag in the label
+            omit_tags[0] = True
+            flagEnds[0] = 3
+        if '!!' in short_legend_tags[1][:3]:
+            omit_tags[1] = True
+            flagEnds[1] = 2
         
-        short_legend_tag = short_legend_tag[flagEnd:]
-        name_label = lambda i: 'Coil: %s, ' % (short_name(data_ids[i], short_legend_tag, omit_tag, reverse_trim, keep_trailing_num=False))
+        short_legend_tags[0] = short_legend_tags[0][flagEnds[0]:]
+        short_legend_tags[1] = short_legend_tags[1][flagEnds[1]:]
+        # name_label = lambda i: 'Coil: %s, ' % (short_name(data_ids[i], short_legend_tag, omit_tag, reverse_trim, keep_trailing_num=False))
+        name_label = lambda i: 'Coil: %s, ' % (trim_name(data_ids[i], short_legend_tags, omit_tags, keep_trailing_num=False))
         
     
     #lambda to get the temperature for each legend label

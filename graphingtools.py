@@ -622,4 +622,70 @@ def short_name(long_name, tag, omit_tag=False, reverse_trim=False, keep_trailing
                      short_name = tail_num + '_' + short_name
                      break
      return short_name
+
+
+def trim_name(long_name, tags, omit_tag=[False, False], keep_trailing_num=True):
+    '''
+    creates a shorter name from a longer one, by trimming characters at the
+    start and end of the name, based on tags found in the long_name. useful 
+    for legend entries.
+
+    Parameters
+    ----------
+    long_name : str
+        original long string to be shortened.
+    tags : [str, str]
+        list (len == 2) of character strings to look for at the start and end
+        of the long_name. Characters before tags[0] and after tags[1] will be 
+        cut. Use an empty string to cut zero characters.
+    omit_tags : [boolean, boolean], optional
+        also omit the tag(s) strings from the short name.
+        The default is [False, False].
+    keep_trailing_num : boolean, optional
+        If long_name has a trailing number it will be prefixed to short_name
+        The default is True.
+    
+    Returns
+    -------
+    short_name : str
+        short version of long_name.
+    '''
+    tag_start = tags[0]
+    tag_end = tags[1]
+
+    # trim the back
+    if(tag_end not in ['', None, False]):
+       try:
+           tag_index = long_name.index(tag_end)
+           if omit_tag[1]:
+               short_name = long_name[:tag_index]
+           else: #i.e. omit_tag[1] == False
+               short_name = long_name[:tag_index+len(tag_end)]
+       except ValueError as err:
+           short_name = long_name
+           print('Error when trying to shorten tag end. End will not be trimmed.')
+           print('caught: ValueError: ', err)
+    
+    # trim the front
+    if(tag_start not in ['', None, False]):
+        try:
+            tag_index = long_name.index(tag_start)
+            if omit_tag[0]:
+                short_name = short_name[tag_index+len(tag_start):]
+            else: #i.e. omit_tag[0] == False
+                short_name = short_name[tag_index:]
+        except ValueError as err:
+            #short_name = long_name
+            print('Error when trying to shorten tag. Start will not be trimmed.')
+            print('caught: ValueError: ', err)
+
+     
+    if keep_trailing_num:    
+        if long_name[-1].isdigit(): #there's a number at the end of the string
+            for s in np.arange(len(long_name)-1, -1, -1):
+                if not long_name[s].isdigit():
+                    tail_num = long_name[s+1:] #the number at the end of the string
+                    short_name = tail_num + '_' + short_name
+                    break
+    return short_name
  
