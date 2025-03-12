@@ -323,7 +323,7 @@ def rlft_plotter(x_datasets, y_datasets, T_datasets=None, data_ids=None, x_label
     #ax.tick_spacing = 1
     #ax.yaxis.set_major_locator(ticker.MultipleLocator(tick_spacing))
 
-    ax.grid(b=True, which='major', linestyle='-', alpha = 0.2)
+    ax.grid(visible=True, which='major', linestyle='-', alpha = 0.2)
     ax.set_xlabel(x_label, labelpad=5)
     ax.set_ylabel(y_label, labelpad=5)
     #ax.set_position([0.125, 0.125, 0.7, 0.9])
