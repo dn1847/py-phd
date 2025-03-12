@@ -77,8 +77,7 @@ x_axis_label = 'Frequency [Hz]'
 #y_axis_multiplier = 10**3 #1 #to multiply small units i.e. Ohms --> mOhms
 normalise_y_data = True #'av' #False, 'min', 'av', 'first', <numeric value> or (True when fit_curves != False). Normalises y data.
 data_labels = 'name' #MUST CORRESPOND TO A KEY IN <parameter_headers> below
-shorten_data_labels = '!!zth' #'!!_core' #False #'tpm'# #Deletes everything after this string in the legend tags.
-#begin string with 'r!' to reverse trim direction
+shorten_data_labels = ['!!zth_', '!!_core'] #[None, None] #[None, 'tpm'] #Trims the legend entries by deleting everything before the first and after the second string.
 #begin string with '!!' or 'r!!' to delete the string too. 
 legend_header = 'phase windings'
 fit_curves = 'R_vs_f'#False # #must be a specific name of a fit. Will not fit if <normalise_y_data> != False. See rlft_plotter.py 
@@ -187,7 +186,7 @@ fit_params = rlft_plotter(x_datasets = [parameter_datasets[x_axis][i] for i in d
                           y_label = y_axis_label,
                           y_multiplier = y_axis_multiplier,
                           normalise_y_axis = normalise_y_data,
-                          short_legend_tag = shorten_data_labels,
+                          short_legend_tags = shorten_data_labels,
                           legend_header = legend_header,
                           data_ids = [parameter_datasets[data_labels][i] for i in data_indices],
                           filter_temps = TEMPERATURES_TO_PLOT,
