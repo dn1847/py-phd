@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-def rlft_plotter(x_datasets, y_datasets, T_datasets=None, data_ids=None, x_label='Frequency [Hz]', y_label='R [m$\Omega$]', y_multiplier=1, normalise_y_axis=False, short_legend_tags=[False, False], legend_header=None, filter_temps='all', num_curves='all', fit_curves=False, save_dir='cwd', save_string='default', save_fitDataString = False):
+def rlft_plotter(x_datasets, y_datasets, T_datasets=None, data_ids=None, x_label='Frequency [Hz]', y_label='R [m$\Omega$]', y_multiplier=1, normalise_y_axis=False, short_legend_tags=[False, False], legend_header=None, filter_temps='all', num_curves='all', fit_curves=False, plot_fitcurves = False, plot_data = True, save_dir='cwd', save_string='default', save_fitDataString = False):
     """
     Plot multiple datasets on one set of axes and saves the figures.
     Can fit curves to datasets based on R(f) characteristic relationship.
@@ -238,6 +238,7 @@ def rlft_plotter(x_datasets, y_datasets, T_datasets=None, data_ids=None, x_label
         col = colour_cycle[np.where(line_indices == c)[0][0] % len(colour_cycle)]
         imarker = next(marker_cycle)
         
+        y_norm = 1 # denominator for y-axis normalisation
         if normalise_y_axis not in [False, 'False']:
             if type(normalise_y_axis) in [int, float]:
                 #norm to this value
@@ -288,9 +289,17 @@ def rlft_plotter(x_datasets, y_datasets, T_datasets=None, data_ids=None, x_label
 
 
         # 6b) plot dataset and fit curve
-        ax.plot(x_data[c], [y_val*y_multiplier for y_val in y_data[c]], marker=imarker, color=col, linestyle='None', label=(name_label(c)))
-        if fit_curves == 'R_vs_f' and normalise_y_axis in [False, 'False']:
-            ax.plot(x_data[c], funcR(x_data[c], *popt)*10**3, color=col, label=fit_label)
+        if plot_data:
+            ax.plot(x_data[c], [y_val*y_multiplier for y_val in y_data[c]], marker=imarker, color=col, linestyle='None', label=(name_label(c)))
+        # if fit_curves == 'R_vs_f' and normalise_y_axis in [False, 'False']:
+        if plot_fitcurves and fit_curves not in [False, 'False']:
+            xc = list(x_data[c]) # copy x_data[c] to leave original unchanged if we extrapolate to 0
+            if x_data[c][0] > 0:
+                x0 = np.arange(0, x_data[c][0], x_data[c][0]/10)
+                xc = np.concat((x0, x_data[c]))
+            yc = funcR(xc, *popt)
+            yc = [y*y_multiplier/y_norm for y in yc]
+            ax.plot(xc, yc, color=col, label=fit_label)
     #    ax_r_t.plot(x_data[c], funcRdc(x_data[c], *popt)*10**3, color=col, linestyle=':', label=rdc_temp_label(c))
     #    ax_r_t.plot(x_data[c], funcRac(x_data[c], *popt)*10**3, color=col, linestyle='--', label=rac_temp_label(c))
         #ax_L_t.plot(x_data[c], l_array[c]*10**6, marker='x', linestyle='None', label=temp_label(c))

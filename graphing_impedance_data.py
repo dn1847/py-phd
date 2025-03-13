@@ -81,6 +81,8 @@ shorten_data_labels = ['!!zth_', '!!_core'] #[None, None] #[None, 'tpm'] #Trims 
 #begin string with '!!' or 'r!!' to delete the string too. 
 legend_header = 'phase windings'
 fit_curves = 'R_vs_f'#False # #must be a specific name of a fit. Will not fit if <normalise_y_data> != False. See rlft_plotter.py 
+plot_fitcurves = True #plot the trend lines fit by the function in fit_curves
+plot_data = True #plot the data points? Can be set false with plot_fitcurves = True to only plot fit curves
 y_axis_label = {
         'resistance' : 'Resistance [m$\Omega$]',
         'impedance' : 'Impedance [m$\Omega$]',
@@ -192,6 +194,8 @@ fit_params = rlft_plotter(x_datasets = [parameter_datasets[x_axis][i] for i in d
                           filter_temps = TEMPERATURES_TO_PLOT,
                           num_curves = HOW_MANY_DATA_FILES,
                           fit_curves = fit_curves,
+                          plot_fitcurves = plot_fitcurves,
+                          plot_data = plot_data,
                           save_dir = data_folder,
                           save_string = save_string,
                           save_fitDataString = save_fitDataString)
